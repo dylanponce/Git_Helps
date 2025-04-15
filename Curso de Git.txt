@@ -1,0 +1,293 @@
+Jerarquias
+-Sistema/System - para toda la computadora
+-Global - para todos los repositorios de "un" usuario
+-Local - es solo aplicable para los repositorios
+
+Area de trabajo----Staged----Repo Local-----Repo Remoto
+
+touch archivo.tipo (para crear archivos en el repo)
+
+carpeta y directorio son lo mismo
+Repositorio Remoto GitHub, GitLab
+
+HEAD es el commit donde nos encontramos actualmente (el puntero del commit que estamos direccionados)
+
+clear  (limpiar consola)
+
+Configuracion de Git 
+/Nombre de Usuario
+git config --global user.name "Dylan"
+/Gmail
+git config --global user.email "dylan@gmail" o sin comillas dobles
+//Configuraciones de Git
+git config --list
+/Configuraciones Globales
+git config --global --list
+
+//Configuraciones Locales
+git config --local --list (Una vez que creamos repositorios se puede usar)
+
+//Configuraciones globales
+git config --global core.editor "code --wait" (el editor es VSC, y wait es, esperar a cerrar el editor para confirmar cambios)
+/Color
+git config --global color.ui true (cambiar colores de terminal)
+/autocrlg
+git config --global core.autocrlf true  (compatibilidad, para archivos de linux,mac, y windows(saltos de pagina))
+
+//Creas Repositorio
+Tenemos el area de trabajo (carpetas,etc)
+El area de preparacion "staged" para proximo commit (Staging)
+
+cd (disco local)
+cd d: (disco local d)
+cd ../ (para volver carpeta atras)
+
+mkdir name (make dir-crear directorio) 
+rmdir name (remover directorio)
+
+//Inicializar Git
+git init
+
+/La rama principal es la rama (master)
+ls (mira los archivos de ese directorio)
+pwd (la ruta donde estamos)
+ls -a (para ver archivos ocultos)
+
+git add . (Subo todos los archivos, ¡NO RECOMENDABLE!)
+git add nombre.tipo (puedo agregar mas nombre.tipo nombre2.tipo)
+//Se subio al area de preparacion
+git status  (nos muestra el area prepracion)
+
+Si consideramos que hay un error en la preparacion
+git rm --cached nombre.tipo
+
+//COMMIT
+git commit -m "se agrego..." -a  m(mensaje)
+git commit -a (manda los archivos directamente)
+
+Restore,Checkout y mas (44:15)
+/Eliminar archivos de repositorios
+rm nombre.tipo
+git status (me notifica la eliminacion de archivo)
+git add nombre.tipo  (agrego archivo a eliminar)
+git commit -m "lo elimine" -a (se elimino el archivo)
+
+/Para recuperar
+git restore nombre.tipo (se restauro del area de preparacion)
+
+git checkout nombre.tipo (vuelve a como estaba antes de modificaciones-ultimo guardado(ultimo commit))
+
+git reset --hard (recupero la modificacion antes de subir al area de preparacion(elimina lo del area de preparacion))
+git reset "nombre.tipo" (lo elimina del area de preparacion al archivo especifico)
+
+/Cambiar nombre de un archivo
+git mv nombre.tipo nombre2.tipo
+git add nombre2.tipo
+git commit -m "cambiar nombre" -a
+//Si yo cambio el nombre desde mi directorio, ese es otro archivo
+git checkout nombre2.tipo (vuelve a mi directorio pero el cambio es otro archivo)
+ 
+git status -s (me cambia el diseño del estatus)
+
+GIT DIFF(54:35) //Que es lo que cambie 
+//Diferencia entre versiones
+git show nombre.tipo (me muestra el archivo)
+git diff --staged     me muestra en rojo lo que esta en el commit y en verde lo que esta en el area de preparacion
+
+git log    (muestra la informacion de los commits   con su id/identificacion)
+git log --oneline   (abreviatura- simplificacion de la informacion)
+git config --global core.abbrev    (dado que puede conincidir el id abreviado, podemos cambiar la cantidad de abbrev)(ej 5)
+git diff id1 id2  (comparacion de commits)
+git diff --name-only id1 id2  (nombre de los archivos que cambiaron)
+git diff --word-diff  (la diferencia a nivel linea de los cambios)
+
+MODIFICAR Y DESHACER COMMITS(1:08:00)
+/crear repo
+cd disco:    (ir al directorio)
+mkdir repo   (crea repo)
+cd repo  (ir al directorio repo)
+git init   (inicializar)
+
+//MODIFICAR
+(el commit en cada rama se agregan mas versiones del proyecto)
+/Si me olvide de algo y no quiero crear un commit
+git commit --amed
+/carga el ultimo commit y puedo cambiar el nombre (pero no agrega modificacion de archivo)
+/debemos rearmar el commit
+git add nombre.tipo
+git commit --amed /volver a modificar el ultimo commit
+/se reemplazo el ultimo commit con la modificacion
+/Lo mejor es modificar el ultimo commit
+/Para volver a un commit anterior
+git rebase -i head~n     (n numero de commit a modificar)
+cambiar de pick a edit
+/Esto me borra los commits que venian despues
+git rebase --continue
+/Vuelven todos los commits pero cambian los HASH (tener en cuenta quecada modificacion los cambia)
+//DESHACER
+git reset --soft id   (borra el ultimo commit)  (los archivos vuelven a el area de preparacion para modificar o eliminar)
+git reset --soft head~n    (se posiciona n atras del commit head)
+git reset --mixed id  (no modifica el area de trabajo, no asi el area de prepracion)
+git reset --hard id  (si sobrescribe un trabajo lo sobrescribe,los cambios se pierden, elimina lo del area de preparacion)
+/Guardar archivos para que hard funcione correctamente
+
+//RAMAS (Branches) (1:31:15)
+Rama princial es MASTER o MAIN
+De nuestra rama cada commit continua con la principal
+Podemos sacar mas ramas sin modificar la principal y 
+luego volver a la principal con las modificaciones (Merges)
+
+git branch    (muestra las ramas creadas)
+git branch nombre-nom   (para crear rama) (la nomenclatura que se usa es kebab case no-ne-na)
+git cheackout nombre-nom   (swichea hacia la otra rama)
+git switch nombre-nom     (swichea hacia la otra rama(moderno,se usa en actualidad))
+/Dependiendo de en que rama nos posicionamos, la rama que creemos es una rama de esa rama
+git switch -c nombre-nom2     (creo una rama nueva y swichea directo)
+
+/Eliminar rama
+git switch master   (Porque no debo eliminar una rama estando en la misma)
+git branch -d nombre-nom2     (eliminar la rama)
+/Modificar la rama
+git branch -m nombre-nom nombre-nombre   (cambio un nombre por el otro)
+git branch -m cambio-nombre    (cambia la rama actual donde estamos)
+
+//FUCIONAR RAMAS (Merges)
+/Antes de fucionar los cambios debo estar en la rama a modificar
+git switch master
+git merge nombre-rama-modificada (se fucionan los commit, no las ramas)(por eso la rama sigue creada)
+/Si hubo un error y no debia fucionar, para volver a una rama antes
+git reset --hard id  (saca la funcion y elimina el commit)
+/Y eliminar rama una vez cumplido su ciclo
+git branch -d nombre-rama-modificada
+
+//MERGE CONFLICT (1:56:25)
+Conflicto en las ramas que hay que resolver (No error)
+El decidir con cual quedarme,al fusionar
+git log --oneline -all   (me muestra todos los commits de las ramas)
+git merge nombre    (ej en VSC me muestra un conflicto de ramas)  
+git merge --continue
+
+//GITIGNORE (2:13:00)
+.gitignore (que archivos debe ignorar)
+git ls-tree -r --name-only id(commit)   (muestra todos los archivos y directorios)
+git reset --hard HEAD~n    (borrar ultimo commit)
+
+.gitignore
+#ignorar achivo
+ingnorar.tipo
+*.tipo  (cualquier archivo nombre con ese tipo se ignora) 
+git ls-tree -r --name-only HEAD  (head porque tengo en cuenta donde estoy)
+!archivo.tipo  (para no ignorar un archivo)
+nombre-carpeta/  (ignora lo de esa carpeta)
+*).tipo     (ignora las copias)
+/No puedo pretender que al modificar el ignore modifique lo que ya subi 
+
+.gitignore_global
+gir config --global core.excludesfile disco:/.gitignore_global
+
+//ALIAS (2:27:20)
+git log --oneline --all --graph  (me muestra el grafico de las ramas)
+/Mostrar el tiempo de commits
+git log --oneline --all --graph --pretty=format:"%C(auto)%h%d %s %C(black)%C(bold)%cr"
+
+gir config --global alias.log-mejorado "log --oneline --all --graph --pretty=format:'%C(auto)%h%d %s %C(black)%C(bold)%cr'"
+git log-mejorado = (a lo de antes, sino que le doy un alias)
+
+//REFLOG (2:32:35)
+git reset --hard id (recupero el commit eliminado(en realidad se vuelve a la ultima referencia))
+/Si pierdo la referencia id del commit uso reflog
+git reflog   ("q" para salir)  (registro de todos los movimientos del HEAD)
+
+
+//INTRODUCCION A GITHUB (2:39:00)
+Con Git trabajamos a nivel local. Por otro lado con GitHub
+Settings puedo cambiar la configuracion (nombre del repo,rama,danger zone (eliminar repo), etc)
+
+//GIT CLONE (2:58:25)
+git clone url(github)
+ls (nos muestra el repo clonado,ojo, ls es para mostrar direccion)
+git log-simple   (nos muestra los commits)
+
+//GIT PUSH (3:06:05)
+//git push (empuja lo que hicimos al servidor)
+git status   (ejemplo modificado)
+git add nombre.tipo    (modificado agregado)
+git status    (modificado en area de preparacion)
+git commit -m "c modificado"    (commit)
+git push origin master   (donde lo descargamos, quiero subirlo)
+Usar un Token (sirve mucho)generar un token  click en repo
+
+//GIT PULL Y FETCH (3:13:00)
+git pull   (baje linea del remoto)  (hace git fetch y git merge)
+3.16.41
+git fetch     !!PREGUNTAR LO DE FETCH
+git switch origin/master
+git switch --detach origin/master
+git switch master
+git pull
+
+git push (mandar los cambios)   
+
+//Migrar repositorio local al remoto    (3:25:00)
+git remote add origin url
+git remote -v   (todas las cosas que podemos hacer con nuestro repo)
+git branch M- main
+git push -u origin main    (siempre que hagamos push lo hace en origin main)
+
+//FORKS (3:32:25)   (similiar a git clone)(desde github lo subimos a nuestra cuenta de github)
+
+//PULL REQUEST  (3:38:10)
+Copio el proyecto de otro, lo modifico, subo las modificaciones y informo a la otra persona para aportar a su proyecto
+Contribute -- open pull request
+
+//GIT ISSUES   (3:47:40)
+Agregar tareas crear un ISSUES, asignacion y mas.
+
+//BUENAS PRACTICAS EN GIT (3:53:00)
+*Importante el gitignore
+*Cada rama que se crea tiene su objetivo, al cumplirse se elimina
+*Nombres descriptivos  -  usar kebap case
+*antes de hacer un pull request probar todo, hacer un marges
+*no trabajar en la rama main, trabajar con las ramas
+*investigar rebase, squash
+*los commits deben ser significativos (no se hacen siempre- cambios importantes)
+*usar tags (etiquetar)
+*ramas que no se usan, eliminarlas
+BUSCAR: git stash(guardar cambios no comprometidos) git stash pop;
+git cherry-pick (fusionar(agarrar un commit y fusionarlo en otra rama));
+milestones;
+tag(marcadores);
+rebase; (Cambiar la historia de los gits)
+squash;
+submodulos; (un repo dentro de otro repo)
+git bisect  (no dice cual fue el commit que nos genera problemas);
+git hooks;
+git flow;   git hub flow;
+
+
+//GitHub   -    Universidad
+Crear nuevo repositorio remoto
+git retome add origin url(del repo remoto)   (vinculacion)
+git branch -M main   (subir cambios)
+git push -u origin main  (iniciar sesion con github)
+/Ramas(branches)
+Rama Principal(master o main)
+Merges Request o Pull Request (la unificacion de cambios (ramas generadas) a la rama principal)
+/Clonar repositorio
+git clone url(del repo)
+/Puedo abrir los archivos desde VSC
+/VSC tiene herramienta de control de versiones
+//Crear .gitignore
+#Quiero eliminar todo lo de un tipo de archivo
+*.pfd    *(todo)   .tipo
+
+git checkout -b feature/mi-rama //caracteristicas nuevas
+git checkout -b bugfix/mi-rama  //correccion de errores
+git checkout -b practica-2  /creacion de rama
+
+/agregar una rama del directorio remoto
+git branch -a  (todas la ramas remotas)
+git checkout origin/nombrederema
+//Se puede ver mejor con VSC
+/Desde la pagina de GitHub Fork para copiar repositorios de otros
+/Desde mis carpetas abro la terminar, y con git clone url (del repo) descargo la copia
